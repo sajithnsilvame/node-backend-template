@@ -1,11 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/database';
+import Role from './role.model';
 
 export class User extends Model {
   public id!: number;
   public username!: string;
   public email!: string;
   public password!: string;
+  public roleId!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
@@ -30,6 +32,14 @@ User.init(
           msg: 'Username must be between 3 and 50 characters long.',
         },
       },
+    },
+    roleId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'user_roles',
+        key: 'id'
+      }
     },
     email: {
       type: DataTypes.STRING,
@@ -68,5 +78,8 @@ User.init(
     timestamps: true,
   }
 );
+
+User.belongsTo(Role, { foreignKey: 'roleId' });
+Role.hasMany(User, { foreignKey: 'roleId' });
 
 export default User;

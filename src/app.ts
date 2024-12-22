@@ -10,12 +10,22 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import morganMiddleware from './middlewares/logger.middleware';
+import cors from 'cors';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// CORS middleware
+const corsOptions = {
+  origin: process.env.CLIENT_ORIGIN || '*', // Allow all origins or specify the frontend's URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+};
+
+app.use(cors(corsOptions)); // Use CORS middleware
 
 // Security middleware
 app.use(helmet());

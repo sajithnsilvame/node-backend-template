@@ -13,7 +13,7 @@ export class AuthService {
     this.authRepository = new AuthRepository();
   }
 
-  async login(email: string, password: string): Promise<{ token: string; user: { id: number; email: string; username: string; } }> {
+  async login(email: string, password: string): Promise<{ token: string; user: { id: number; email: string; username: string; roleId: number } }> {
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
       throw new Error("Invalid email or password");
@@ -37,6 +37,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         username: user.username,
+        roleId: user.roleId
       },
     };
   }

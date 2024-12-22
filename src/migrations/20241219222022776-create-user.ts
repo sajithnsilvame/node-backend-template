@@ -9,6 +9,16 @@ export default {
         autoIncrement: true,
         allowNull: false,
       },
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'user_roles',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
+      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,

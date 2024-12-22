@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "1234",
-    "database": "todo_api",
+    "database": "auth_api",
     "host": "localhost",
     "dialect": "mysql"
   },
