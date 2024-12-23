@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "1234",
-    "database": "auth_api",
-    "host": "localhost",
+    "username": "nexusgenit_auth_db",
+    "password": "M58Og4O4FsNs",
+    "database": "nexusgenit_auth_db",
+    "host": "91.204.209.39",
     "dialect": "mysql"
   },
   "test": {

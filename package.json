@@ -4,10 +4,9 @@
   "description": "A Node.js Express MySQL backend CRUD API for a todo application.",
   "main": "src/app.ts",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc",
-    "start:prod": "node dist/app.js",
     "migrate": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:migrate",
     "seed": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:all",
     "seed:undo": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:undo:all",
