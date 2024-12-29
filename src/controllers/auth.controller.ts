@@ -56,7 +56,7 @@ export class AuthController {
     Logger.error(`Logout failed: ${error.message}`);
     res.status(400).json({ success: false, message: error.message });
   }
-}
+  }
 
 
   async logoutAll(req: AuthenticatedRequest, res: Response): Promise<void> {
@@ -75,6 +75,61 @@ export class AuthController {
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
       Logger.error(`Logout all devices failed: ${errorMessage}`);
       res.status(500).json({ success: false, message: errorMessage });
+    }
+  }
+
+  async getAuthUser(req: AuthenticatedRequest, res: Response): Promise<void> {
+  try {
+    const user = await this.authService.getAuthUserDetails(req.user!.id);
+    
+    res.status(200).json({
+      success: true,
+      data: user
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+    Logger.error(`Failed to get auth user details: ${errorMessage}`);
+    res.status(400).json({ success: false, message: errorMessage });
+  }
+  }
+
+  async updateUser(req: AuthenticatedRequest, res: Response): Promise<void> {
+    try {
+      const userId = req.user!.id;
+      const updateData = req.body;
+      
+      const updatedUser = await this.authService.updateUserDetails(userId, updateData);
+      
+      res.status(200).json({
+        success: true,
+        data: updatedUser,
+        message: "User updated successfully"
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      Logger.error(`Failed to update user: ${errorMessage}`);
+      res.status(400).json({ success: false, message: errorMessage });
+    }
+  }
+
+  async updatePassword(req: AuthenticatedRequest, res: Response): Promise<void> {
+    try {
+      const userId = req.user!.id;
+      const { currentPassword, newPassword } = req.body;
+
+      await this.authService.updatePassword(userId, currentPassword, newPassword);
+      
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully. Please login again."
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      Logger.error(`Failed to update password: ${errorMessage}`);
+      res.status(400).json({ 
+        success: false, 
+        message: errorMessage 
+      });
     }
   }
 

@@ -10,33 +10,45 @@ export default {
 
     await queryInterface.bulkInsert('users', [
       {
+        firstName: 'John',
+        lastName: 'Smith',
         username: 'superadmin',
         email: 'superadmin@example.com',
         password: hashedPassword1,
+        mobile: '0712457937',
         roleId: 1, // superadmin role
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        firstName: 'John',
+        lastName: 'Smith',
         username: 'admin',
         email: 'admin@example.com',
         password: hashedPassword2,
+        mobile: '0712457937',
         roleId: 2, // admin role
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        firstName: 'John',
+        lastName: 'Smith',
         username: 'manager',
         email: 'manager@example.com',
         password: hashedPassword3,
+        mobile: '0712457937',
         roleId: 3, // manager role
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
+        firstName: 'John',
+        lastName: 'Smith',
         username: 'user',
         email: 'user@example.com',
         password: hashedPassword4,
+        mobile: '0712457937',
         roleId: 4, // regular user role
         createdAt: new Date(),
         updatedAt: new Date(),
