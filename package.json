@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "migrate": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:migrate",
     "seed": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:all",
     "seed:undo": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:undo:all",
