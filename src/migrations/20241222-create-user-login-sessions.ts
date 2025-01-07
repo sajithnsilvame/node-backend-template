@@ -44,7 +44,10 @@ export default {
         type: DataTypes.DATE,
         allowNull: false,
       }
-    });
+    }, {
+  charset: 'utf8mb4', // Character set
+  collate: 'utf8mb4_general_ci', // Collation
+});
 
     // Add index for faster token lookups
     await queryInterface.addIndex('user_login_sessions', ['token']);

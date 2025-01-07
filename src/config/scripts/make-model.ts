@@ -67,8 +67,9 @@ export default ${modelName};
     // Create a migration file if the '--m' or '-m' flag is present
     if (createMigration) {
       console.log("Creating migration file...");
-      const timestamp = new Date().toISOString().replace(/[-T:\.Z]/g, "");
-      const migrationFileName = `${timestamp}-create-${modelName.toLowerCase()}.ts`;
+      const now = new Date();
+      const timestamp = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, "0")}_${String(now.getDate()).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
+      const migrationFileName = `${timestamp}_create_${modelName.toLowerCase()}_table.ts`;
       const migrationFilePath = path.join(migrationsDir, migrationFileName);
 
       const migrationTemplate = `
@@ -98,6 +99,10 @@ export default {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
+    }, 
+    {
+      charset: 'utf8mb4', 
+      collate: 'utf8mb4_general_ci', 
     });
   },
 
