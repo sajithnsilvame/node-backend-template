@@ -98,6 +98,10 @@ export default {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
+    }, 
+    {
+      charset: 'utf8mb4', // Character set
+      collate: 'utf8mb4_general_ci', // Collation
     });
   },
 
