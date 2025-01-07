@@ -7,6 +7,8 @@ import bcrypt from 'bcryptjs';
 
 
 export class AuthRepository implements IAuthRepository {
+
+  
   async findUserByEmail(email: string): Promise<User | null> {
     return await User.findOne({ where: { email } });
   }

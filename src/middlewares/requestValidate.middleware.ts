@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Joi, { Schema } from 'joi';
+import { Schema } from 'joi';
 
 export const validateRequest = (schema: Schema, property: 'body' | 'params' | 'query' = 'body') => {
   return (req: Request, res: Response, next: NextFunction): void => {
