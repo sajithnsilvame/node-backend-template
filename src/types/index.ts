@@ -8,7 +8,7 @@ export interface Todo {
 }
 
 export interface APIResponse<T> {
-    success: boolean;
+    status: boolean;
     data?: T;
     error?: string;
     message?: string;

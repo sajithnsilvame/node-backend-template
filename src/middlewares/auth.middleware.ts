@@ -22,7 +22,7 @@ export const Authenticated = async (
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      res.status(401).json({ message: 'Unauthorized Access Denied' });
+      res.status(401).json({ status: false, message: 'Unauthorized Access Denied', statusCode: 401, code: '001-401' });
       return;
     }
 
@@ -31,19 +31,19 @@ export const Authenticated = async (
     // Check if token is valid in the database
     const isValidSession = await authRepository.isTokenValid(token);
     if (!isValidSession) {
-      res.status(401).json({ message: 'Session expired or invalid' });
+      res.status(401).json({ status: false, message: 'Session expired or invalid', statusCode: 401, code: '002-401' });
       return;
     }
 
     const decoded = verifyToken(token) as { id: number };
     if (!decoded || typeof decoded !== 'object') {
-      res.status(401).json({ message: 'Invalid token' });
+      res.status(401).json({ status: false, message: 'Invalid token', statusCode: 401, code: '003-401' });
       return;
     }
 
     const user = await User.findByPk(decoded.id);
     if (!user) {
-      res.status(401).json({ message: 'User not found' });
+      res.status(401).json({ status: false, message: 'User Not Found', statusCode: 401, code: '004-401' });
       return;
     }
 

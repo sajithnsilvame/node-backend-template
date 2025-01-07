@@ -2,17 +2,14 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt";
 import { AuthRepository } from "../repositories/auth.repository";
 import { add } from 'date-fns';
-import { injectable } from "tsyringe";
+import { injectable, inject } from "tsyringe";
 
 
 
 @injectable()
 export class AuthService {
-  private authRepository: AuthRepository;
-
-  constructor() {
-    this.authRepository = new AuthRepository();
-  }
+  
+  constructor(@inject(AuthRepository) private authRepository: AuthRepository) {}
 
   async login(email: string, password: string): Promise<{ token: string; user: { id: number; firstName: string; lastName: string; email: string; username: string; mobile: string; roleId: number } }> {
     const user = await this.authRepository.findUserByEmail(email);
