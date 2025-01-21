@@ -9,6 +9,23 @@ import bcrypt from 'bcryptjs';
 export class AuthRepository implements IAuthRepository {
 
   
+  /**
+   * Function: Create a new user
+   * @param userData 
+   * @returns 
+   */
+  async createUser(userData: {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    password: string;
+    mobile: string;
+    roleId: number;
+  }): Promise<User> {
+    return await User.create(userData);
+  }
+  
   async findUserByEmail(email: string): Promise<User | null> {
     return await User.findOne({ where: { email } });
   }

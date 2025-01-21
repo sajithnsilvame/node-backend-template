@@ -13,7 +13,8 @@
     "seed:specific": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed --seed",
     "seed:undo:specific": "ts-node src/config/scripts/undoSpecSeeder.ts",
     "make:model": "ts-node src/config/scripts/make-model.ts",
-    "make:seeder": "ts-node src/config/scripts/make-seeder.ts"
+    "make:seeder": "ts-node src/config/scripts/make-seeder.ts",
+    "make:route": "ts-node src/config/scripts/make-route.ts"
   },
   "dependencies": {
     "@types/hapi__joi": "^17.1.15",

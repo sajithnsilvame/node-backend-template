@@ -3,7 +3,7 @@ import sequelize from '../config/database';
 
 export class Role extends Model {
   public id!: number;
-  public name!: string;
+  public role_name!: string;
   public description!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;

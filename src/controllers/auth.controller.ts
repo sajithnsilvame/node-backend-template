@@ -17,6 +17,38 @@ export class AuthController {
   // Injected dependency
   constructor( @inject(AuthService) private authService: AuthService ) {}
 
+  /**
+   * Function: handle the user registration request
+   * @param req 
+   * @param res 
+   */
+  async register(req: Request, res: Response): Promise<void> {
+    Logger.info(`Received registration request from IP: ${req.ip}, Payload: ${JSON.stringify(req.body)}`);
+
+    try {
+      const { firstName, lastName, username, email, password, mobile } = req.body;
+      const user = await this.authService.register(firstName, lastName, username, email, password, mobile);
+
+      Logger.info(`Registration successful for user: ${user.email}`);
+      res.status(201).json({
+        status: true,
+        data: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          username: user.username,
+          mobile: user.mobile,
+          roleId: user.roleId,
+        },
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      Logger.error(`Registration failed for IP: ${req.ip}, Error: ${errorMessage}`);
+      res.status(400).json({ status: false, message: errorMessage });
+    }
+  }
+
     /**
      * Function: hanlde the login request
      * @param req 
