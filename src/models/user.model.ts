@@ -13,6 +13,7 @@ export class User extends Model {
   public roleId!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public readonly Role?: Role;
 
   // Add any custom methods for the User model here if needed
 }

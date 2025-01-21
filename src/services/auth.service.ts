@@ -11,6 +11,53 @@ export class AuthService {
   
   constructor(@inject(AuthRepository) private authRepository: AuthRepository) {}
 
+  /**
+   * Function: Register a new user
+   * @param firstName 
+   * @param lastName 
+   * @param username 
+   * @param email 
+   * @param password 
+   * @param mobile 
+   * @returns 
+   */
+  async register(
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+    mobile: string
+  ): Promise<{ id: number; firstName: string; lastName: string; email: string; username: string; mobile: string; roleId: number }> {
+    const existingUser = await this.authRepository.findUserByEmail(email);
+    if (existingUser) {
+      throw new Error("User with this email already exists");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const defaultRoleId = 4; 
+
+    const user = await this.authRepository.createUser({
+      firstName,
+      lastName,
+      username,
+      email,
+      password: hashedPassword,
+      mobile,
+      roleId: defaultRoleId,
+    });
+
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+      mobile: user.mobile,
+      roleId: user.roleId,
+    };
+  }
+
   async login(email: string, password: string): Promise<{ token: string; user: { id: number; firstName: string; lastName: string; email: string; username: string; mobile: string; roleId: number } }> {
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {

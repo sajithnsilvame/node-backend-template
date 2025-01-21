@@ -8,6 +8,62 @@ const authController = container.resolve(AuthController);
 
 /**
  * @swagger
+ * /auth/register:
+ *   post:
+ *     tags: [User]
+ *     summary: Register a new user
+ *     description: Register a new user with default role as 'user'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               mobile:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     mobile:
+ *                       type: string
+ *                     roleId:
+ *                       type: integer
+ */
+router.post('/register', authController.register.bind(authController));
+
+/**
+ * @swagger
  * /auth/login:
  *   post:
  *     tags: [User]
@@ -71,7 +127,7 @@ router.post('/login', authController.login.bind(authController));
  *       200:
  *         description: Logout successful
  */
-router.post('/logout', authController.logout.bind(authController));
+router.post('/logout', Authenticated, authController.logout.bind(authController));
 
 /**
  * @swagger
