@@ -62,3 +62,5 @@ export const down = async (queryInterface: QueryInterface) => {
     console.error("Error creating seeder file:", err);
   }
 })();
+
+// =======================developed by Sajith==========================================//
