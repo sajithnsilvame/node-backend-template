@@ -12,7 +12,7 @@ export class ${RepositoryName}Repository implements I${RepositoryName}Repository
         return await ${RepositoryName}.create(${RepositoryName.toLowerCase()}Data);
     }
 
-    async getAll${RepositoryName}(): Promise<${RepositoryName}[]> {
+    async getAll${RepositoryName}s(): Promise<${RepositoryName}[]> {
         return await ${RepositoryName}.findAll();
     }
 
@@ -50,7 +50,7 @@ import ${RepositoryName} from "../../models/${RepositoryName.toLowerCase()}.mode
         
 export interface I${RepositoryName}Repository {
     create${RepositoryName}(${RepositoryName.toLowerCase()}: Partial<${RepositoryName}>): Promise<${RepositoryName}>;
-    getAll${RepositoryName}(): Promise<${RepositoryName}[]>;
+    getAll${RepositoryName}s(): Promise<${RepositoryName}[]>;
     find${RepositoryName}ById(${RepositoryName.toLowerCase()}Id: number): Promise<${RepositoryName} | null>;
     update${RepositoryName}(${RepositoryName.toLowerCase()}Id: number, updateData: Partial<${RepositoryName}>): Promise<${RepositoryName} | null>;
     delete${RepositoryName}(${RepositoryName.toLowerCase()}Id: number): Promise<boolean>;

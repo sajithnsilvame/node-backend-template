@@ -11,7 +11,7 @@ import { AppError } from "../utils/AppError";
 
 
 @injectable()
-export class UserRoleController  {
+export class ${controllerName}Controller  {
     constructor(@inject(${controllerName}Service) private ${controllerName.toLowerCase()}Service: ${controllerName}Service) {}
 
     async create${controllerName}(req: Request, res: Response): Promise<void> {
@@ -25,7 +25,7 @@ export class UserRoleController  {
         }
     }
 
-    async getAll${controllerName}(req: Request, res: Response): Promise<void> {
+    async getAll${controllerName}s(req: Request, res: Response): Promise<void> {
         try {
             const ${controllerName.toLowerCase()} = await this.${controllerName.toLowerCase()}Service.getAll${controllerName}();
             const response: APIResponse<typeof ${controllerName.toLowerCase()}> = { status: true, data: ${controllerName.toLowerCase()} };
