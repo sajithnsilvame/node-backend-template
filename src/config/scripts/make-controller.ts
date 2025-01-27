@@ -27,7 +27,7 @@ export class ${controllerName}Controller  {
 
     async getAll${controllerName}s(req: Request, res: Response): Promise<void> {
         try {
-            const ${controllerName.toLowerCase()} = await this.${controllerName.toLowerCase()}Service.getAll${controllerName}();
+            const ${controllerName.toLowerCase()} = await this.${controllerName.toLowerCase()}Service.getAll${controllerName}s();
             const response: APIResponse<typeof ${controllerName.toLowerCase()}> = { status: true, data: ${controllerName.toLowerCase()} };
             res.status(200).json(response);
         } catch (error: any) {

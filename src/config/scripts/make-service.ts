@@ -17,7 +17,7 @@ export class ${ServiceName}Service {
     }
 
     async getAll${ServiceName}s(): Promise<${ServiceName}[]> {
-        return await this.${ServiceName.toLowerCase()}Repository.getAll${ServiceName}();
+        return await this.${ServiceName.toLowerCase()}Repository.getAll${ServiceName}s();
     }
     
     async find${ServiceName}ById(${ServiceName.toLowerCase()}Id: number): Promise<${ServiceName} | null> {
