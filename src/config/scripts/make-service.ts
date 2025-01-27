@@ -16,7 +16,7 @@ export class ${ServiceName}Service {
         return await this.${ServiceName.toLowerCase()}Repository.create${ServiceName}(${ServiceName.toLowerCase()}Data);
     }
 
-    async getAll${ServiceName}()s: Promise<${ServiceName}[]> {
+    async getAll${ServiceName}s(): Promise<${ServiceName}[]> {
         return await this.${ServiceName.toLowerCase()}Repository.getAll${ServiceName}();
     }
     
