@@ -1,16 +1,18 @@
 import swaggerJsdoc from "swagger-jsdoc";
+import dotenv from "dotenv";
+dotenv.config();
 
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Todo API",
+      title: process.env.APP_NAME || "API",
       version: "1.0.0",
       description: "API documentation for the Todo application",
     },
     servers: [
       {
-        url: "http://localhost:3000/api",
+        url: "http://localhost:8000/api",
         description: "Local development server",
       },
     ],
