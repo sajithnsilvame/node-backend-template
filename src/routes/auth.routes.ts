@@ -2,6 +2,9 @@ import { Router } from 'express';
 import AuthController from '../controllers/auth.controller';
 import { container } from 'tsyringe';
 import { Authenticated } from '../middlewares/auth.middleware';
+import { authLimiter } from '../middlewares/rateLimit.middleware';
+import { validateRequest } from '../middlewares/requestValidate.middleware';
+import { UserRegisterSchema } from '../schemas/User.schema';
 
 const router = Router();
 const authController = container.resolve(AuthController);
@@ -60,7 +63,7 @@ const authController = container.resolve(AuthController);
  *                     roleId:
  *                       type: integer
  */
-router.post('/register', authController.register.bind(authController));
+router.post('/register', authLimiter, validateRequest(UserRegisterSchema), authController.register.bind(authController));
 
 /**
  * @swagger
@@ -112,7 +115,7 @@ router.post('/register', authController.register.bind(authController));
  *                         roleId:
  *                            type: number
  */
-router.post('/login', authController.login.bind(authController));
+router.post('/login', authLimiter, authController.login.bind(authController));
 
 /**
  * @swagger
