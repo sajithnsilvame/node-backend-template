@@ -11,6 +11,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import morganMiddleware from './middlewares/logger.middleware';
 import cors from 'cors';
+import { apiLimiter } from "./middlewares/rateLimit.middleware";
 
 // Load environment variables
 dotenv.config();
@@ -39,6 +40,8 @@ if (process.env.NODE_ENV === 'development') {
 } else {
     app.use(morgan('combined')); // More detailed logging for production
 }
+
+app.use(apiLimiter);
 
 // Middleware
 app.use(json());
