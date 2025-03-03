@@ -39,13 +39,13 @@ export class ${ServiceName}Service {
   // Write the file
   fs.writeFileSync(filePath, serviceContent.trim());
 
-  console.log(`${ServiceName} service generated successfully at: ${filePath}`);
+  console.log(`✅ ${ServiceName} service generated successfully at: ${filePath}`);
 }
 
 // Get the service name from the command line
 const serviceName = process.argv[2];
 if (!serviceName) {
-  console.error("Please provide a service name. Usage: npm run make:service <ServiceName>");
+  console.error("⚠️ Please provide a service name. Usage: npm run make:service <ServiceName>");
   process.exit(1);
 }
 

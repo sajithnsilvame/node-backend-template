@@ -41,7 +41,7 @@ export class ${RepositoryName}Repository implements I${RepositoryName}Repository
   // Write the file
   fs.writeFileSync(filePath, repositoryContent.trim());
 
-  console.log(`${RepositoryName} repository generated successfully at: ${filePath}`);
+  console.log(`✅ ${RepositoryName} repository generated successfully at: ${filePath}`);
 }
 
 const generateRepositoryInterfaceFile = (RepositoryName: string) => {
@@ -62,13 +62,13 @@ export interface I${RepositoryName}Repository {
   // Write the file
   fs.writeFileSync(filePath, repositoryInterfaceContent.trim());
 
-  console.log(`${RepositoryName} repository Interface generated successfully at: ${filePath}`);
+  console.log(`✅ ${RepositoryName} repository Interface generated successfully at: ${filePath}`);
 }
 
 
 const repositoryName = process.argv[2];
 if (!repositoryName) {
-  console.error("Please provide a repository name. Usage: npm run make:repo <RepositoryName>");
+  console.error("⚠️ Please provide a repository name. Usage: npm run make:repo <RepositoryName>");
   process.exit(1);
 }
 

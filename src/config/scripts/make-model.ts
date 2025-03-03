@@ -2,16 +2,17 @@ import * as fs from "fs/promises";
 import * as path from "path";
 
 const args = process.argv.slice(2);
-const modelName = args[0];
-const createMigration = args.includes("-m") || args.includes("--m");
+const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+const modelName = capitalizeFirstLetter(args[0]);
+const createMigration = args.includes("+m");
 
 if (!modelName) {
-  console.error("Please provide a model name.");
+  console.error("❌ Please provide a model name.");
   process.exit(1);
 }
 
 console.log(`Model Name: ${modelName}`);
-console.log(`Create Migration: ${createMigration}`);
+console.log(`✅ Create Migration: ${createMigration}`);
 
 // Directories
 const modelsDir = path.join(process.cwd(), "src", "models");
@@ -28,7 +29,7 @@ const relativeModelFilePath = path.relative(process.cwd(), modelFilePath);
       .catch(() => false);
 
     if (exists) {
-      console.log(`Model "${modelName}" already exists.`);
+      console.log(`⚠️  Model "${modelName}" already exists.`);
       process.exit(0);
     }
 
@@ -61,12 +62,12 @@ export default ${modelName};
     // Write model file
     await fs.writeFile(modelFilePath, modelTemplate);
     console.log(
-      `"${modelName}" model created successfully. < ${relativeModelFilePath} >`
+      `✅ ${modelName} model created successfully. < ${relativeModelFilePath} >`
     );
 
     // Create a migration file if the '--m' or '-m' flag is present
     if (createMigration) {
-      console.log("Creating migration file...");
+      console.log("🔄 Creating migration file...");
       const now = new Date();
       const timestamp = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, "0")}_${String(now.getDate()).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(now.getMinutes()).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
       const migrationFileName = `${timestamp}_create_${modelName.toLowerCase()}_table.ts`;
@@ -118,13 +119,13 @@ export default {
       // Write migration file
       await fs.writeFile(migrationFilePath, migrationTemplate);
       console.log(
-        `Migration for "${modelName}" created successfully at < ${migrationFilePath} >.`
+        `✅ Migration for "${modelName}" created successfully at < ${migrationFilePath} >.`
       );
     } else {
-      console.log("Migration flag not set, skipping migration creation.");
+      console.log("⚠️ Migration flag not set, skipping migration creation.");
     }
   } catch (err) {
-    console.error("Error creating model or migration:", err);
+    console.error("❌ Error creating model or migration:", err);
   }
 })();
 

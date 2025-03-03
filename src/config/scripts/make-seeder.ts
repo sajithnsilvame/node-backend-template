@@ -6,11 +6,11 @@ const args = process.argv.slice(2);
 const seederName = args[0];
 
 if (!seederName) {
-  console.error("Please provide a seeder name. Example: npm run make:seeder SeederName");
+  console.error("⚠️ Please provide a seeder name. Example: npm run make:seeder SeederName");
   process.exit(1);
 }
 
-console.log(`Seeder Name: ${seederName}`);
+console.log(`🌱 Seeder Name: ${seederName}`);
 
 // Paths
 const seedersDir = path.join(process.cwd(), "src", "seeders");
@@ -57,9 +57,9 @@ export const down = async (queryInterface: QueryInterface) => {
 
     // Write the seeder file
     await fs.writeFile(seederFilePath, seederTemplate, "utf8");
-    console.log(`Seeder file created: ${seederFilePath}`);
+    console.log(`✅ Seeder file  created successfully: ${seederFilePath} `);
   } catch (err) {
-    console.error("Error creating seeder file:", err);
+    console.error("❌ Error creating seeder file:", err);
   }
 })();
 

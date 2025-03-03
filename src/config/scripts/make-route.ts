@@ -147,13 +147,13 @@ export default router;
   // Write the file
   fs.writeFileSync(filePath, routeContent.trim());
 
-  console.log(`Route file generated successfully at: ${filePath}`);
+  console.log(`✅ Route file generated successfully at: ${filePath}`);
 };
 
 // Get the route name from the command line
 const routeName = process.argv[2];
 if (!routeName) {
-  console.error("Please provide a route name. Usage: npm run make:route <RouteName>");
+  console.error("⚠️ Please provide a route name. Usage: npm run make:route <RouteName>");
   process.exit(1);
 }
 

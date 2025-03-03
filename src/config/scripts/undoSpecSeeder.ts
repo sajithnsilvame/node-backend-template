@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 const seederName = process.argv[2];
 
 if (!seederName) {
-    console.error('Please provide a seeder name');
+    console.error('⚠️ Please provide a seeder name');
     process.exit(1);
 }
 
