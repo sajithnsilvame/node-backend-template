@@ -109,13 +109,13 @@ export class ${controllerName}Controller  {
   // Write the file
   fs.writeFileSync(filePath, controllerContent.trim());
 
-  console.log(`${controllerName} controller generated successfully at: ${filePath}`);
+  console.log(`✅ ${controllerName} controller generated successfully at: ${filePath}`);
 }
 
 // Get the controller name from the command line
 const controllerName = process.argv[2];
 if (!controllerName) {
-  console.error("Please provide a controller name. Usage: npm run make:controller <ControllerName>");
+  console.error("⚠️ Please provide a controller name. Usage: npm run make:controller <ControllerName>");
   process.exit(1);
 }
 
