@@ -2,7 +2,7 @@ import { inject, injectable } from "tsyringe";
 import { Request, Response, NextFunction } from "express";
 import { UserRoleService } from "../services/userRole.service";
 import { APIResponse } from "../types";
-import { AppError } from "../utils/AppError";
+import { AppError } from "../utils/errors/AppError";
 
 
 @injectable()
