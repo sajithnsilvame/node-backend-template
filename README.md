@@ -127,6 +127,7 @@ RATE_LIMIT_MAX=100          # Max 100 requests per windowMs per IP
 *   `npm run migrate`: Applies database migrations using Sequelize CLI.
 *   `npm run seed`: Seeds the database using Sequelize CLI.
 *   `npm run seed:undo`: Reverts all database seeds.
+*   `npm run seed:specific seederName`: Run specific seeder.
 *   `npm run make:model <modelName>`: Generates a new Sequelize model file in `src/models`.
 *   `npm run make:seeder <seederName>`: Generates a new Sequelize seeder file in `src/seeders`.
 *   `npm run make:route <routeName>`: Generates a new route file template in `src/routes`.
