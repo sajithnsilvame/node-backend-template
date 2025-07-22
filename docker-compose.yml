@@ -8,7 +8,7 @@ services:
     environment:
       DB_HOST: db  # ✅ Use service name "db"
       DB_USER: root
-      DB_PASSWORD:
+      DB_PASSWORD: root_password
       DB_NAME: auth_api
       DB_PORT: 3306
       NODE_ENV: development
@@ -25,11 +25,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: auth_api
-      MYSQL_USER: root
-      MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD: root_password 
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
