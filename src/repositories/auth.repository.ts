@@ -4,6 +4,7 @@ import { UserLoginSession } from "../models/userLoginSession.model";
 import { IAuthRepository } from "../types/repo/IAuthRepository";
 import { Op } from "sequelize";
 import bcrypt from 'bcryptjs';
+import sequelize from "../config/database";
 
 
 export class AuthRepository implements IAuthRepository {
@@ -76,16 +77,42 @@ export class AuthRepository implements IAuthRepository {
   }
 
   async createUserSession(userId: number, token: string, expiresAt: Date): Promise<UserLoginSession> {
-  await UserLoginSession.update(
-    { isValid: false },
-    { where: { userId, isValid: true } }
-  );
+    const t = await sequelize.transaction();
+    try {
+      await UserLoginSession.update(
+        { isValid: false },
+        { where: { userId, isValid: true }, transaction: t }
+      );
+      const session = await UserLoginSession.create(
+        { userId, token, expiresAt },
+        { transaction: t }
+      );
+      await t.commit();
+      return session;
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
+  }
 
-  return await UserLoginSession.create({
-    userId,
-    token,
-    expiresAt,
-  });
+  async resetPasswordAndSessions(userId: number, hashedPassword: string): Promise<void> {
+    const t = await sequelize.transaction();
+    try {
+      const user = await User.findByPk(userId, { transaction: t });
+      if (!user) {
+        await t.rollback();
+        throw new Error('User not found');
+      }
+      await user.update({ password: hashedPassword }, { transaction: t });
+      await UserLoginSession.update(
+        { isValid: false },
+        { where: { userId, isValid: true }, transaction: t }
+      );
+      await t.commit();
+    } catch (error) {
+      await t.rollback();
+      throw error;
+    }
   }
 
   async invalidateUserSession(token: string): Promise<boolean> {

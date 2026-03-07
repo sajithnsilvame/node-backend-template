@@ -5,28 +5,29 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './config/swagger';
 import routes from './routes/index';
 import connectToDatabase from './config/database';
-import { errorHandler } from './middlewares/error.middleware';
-import dotenv from 'dotenv';
+import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import morganMiddleware from './middlewares/logger.middleware';
 import cors from 'cors';
 import { apiLimiter } from "./middlewares/rateLimit.middleware";
-
-// Load environment variables
-dotenv.config();
+import config from './config/application.config';
+import Logger from './utils/logger';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.app.port;
+
+// Export app for testing
+export { app };
 
 // CORS middleware
 const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || '*', // Allow all origins or specify the frontend's URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+  origin: config.app.clientOrigin,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions)); // Use CORS middleware
+app.use(cors(corsOptions));
 
 // Security middleware
 app.use(helmet());
@@ -35,41 +36,50 @@ app.use(helmet());
 app.use(morganMiddleware);
 
 // Request logging middleware
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev')); // Logs: :method :url :status :response-time ms
+if (config.app.nodeEnv === 'development') {
+  app.use(morgan('dev'));
 } else {
-    app.use(morgan('combined')); // More detailed logging for production
+  app.use(morgan('combined'));
 }
 
 app.use(apiLimiter);
 
-// Middleware
-app.use(json());
-if (process.env.NODE_ENV === 'development') {
-    app.use(process.env.SWAGGER_URL || '/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    
+// Body parsers
+app.use(json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Swagger docs (development only)
+if (config.app.nodeEnv === 'development') {
+  app.use(config.app.swaggerUrl, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
-// Routes
-app.use('/api', routes);
-
-// Default route (optional)
-app.get('/api', (req, res) => {
-  res.send('Welcome to the Todo API');
+// Health check
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: true, message: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Error handling middleware
+// API routes
+app.use('/api', routes);
+
+// 404 handler — must be after all routes
+app.use(notFoundHandler);
+
+// Global error handler — must be last
 app.use(errorHandler);
 
-// Database connection
+// Database connection and server startup
 connectToDatabase.authenticate()
   .then(() => {
     app.listen(PORT, () => {
-      console.log('Connected to database');
-      console.log(`Server is running on http://localhost:${PORT}/api`);
-      console.log(`Swagger docs available at http://localhost:${PORT}${process.env.SWAGGER_URL || '/api-docs'}`);
+      Logger.info('Connected to database');
+      Logger.info(`Application Mode: ${config.app.nodeEnv}`);
+      Logger.info(`Server is running on http://localhost:${PORT}/api`);
+      if (config.app.nodeEnv === 'development') {
+        Logger.info(`Swagger docs available at http://localhost:${PORT}${config.app.swaggerUrl}`);
+      }
     });
   })
   .catch(err => {
-    console.error('Database connection failed:', err);
+    Logger.error('Database connection failed', { error: err });
+    process.exit(1);
   });

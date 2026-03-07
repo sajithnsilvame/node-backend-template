@@ -6,7 +6,7 @@ import Sequelize, { DataTypes } from 'sequelize';
 import { env as _env } from 'process';
 const basename = _basename(__filename);
 const env = _env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
 let sequelize;

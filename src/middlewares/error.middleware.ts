@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/errors/AppError';
+import Logger from '../utils/logger';
 
 export const errorHandler = (
   err: Error | AppError,
@@ -9,20 +10,20 @@ export const errorHandler = (
 ): void => {
   const isDevelopment = process.env.NODE_ENV === 'development';
 
-  // Check if the error is an instance of AppError
   if (err instanceof AppError) {
+    if (!err.isOperational) {
+      Logger.error(`Unexpected AppError: ${err.message}`, { stack: err.stack });
+    }
     res.status(err.statusCode).json({
-      status: 'error',
+      status: false,
       statusCode: err.statusCode,
       message: err.message,
-      ...(isDevelopment && { stack: err.stack }), // Include stack trace in development mode
+      ...(isDevelopment && { stack: err.stack }),
     });
   } else {
-    console.error(err.stack); // Log the stack trace for debugging
-
-    // For unexpected errors
+    Logger.error(`Unhandled error: ${err.message}`, { stack: err.stack });
     res.status(500).json({
-      status: 'error',
+      status: false,
       statusCode: 500,
       message: 'Internal Server Error',
       ...(isDevelopment && { stack: err.stack, error: err.message }),

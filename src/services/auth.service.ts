@@ -3,24 +3,16 @@ import { generateToken } from "../utils/jwt";
 import { AuthRepository } from "../repositories/auth.repository";
 import { add } from 'date-fns';
 import { injectable, inject } from "tsyringe";
-
-
+import { AppError } from "../utils/errors/AppError";
+import { ConflictError, NotFoundError } from "../utils/errors/customErrors";
+import { UserDTO } from "../types";
+import config from "../config/application.config";
 
 @injectable()
 export class AuthService {
-  
+
   constructor(@inject(AuthRepository) private authRepository: AuthRepository) {}
 
-  /**
-   * Function: Register a new user
-   * @param firstName 
-   * @param lastName 
-   * @param username 
-   * @param email 
-   * @param password 
-   * @param mobile 
-   * @returns 
-   */
   async register(
     firstName: string,
     lastName: string,
@@ -28,14 +20,13 @@ export class AuthService {
     email: string,
     password: string,
     mobile: string
-  ): Promise<{ id: number; firstName: string; lastName: string; email: string; username: string; mobile: string; roleId: number }> {
+  ): Promise<UserDTO> {
     const existingUser = await this.authRepository.findUserByEmail(email);
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      throw new ConflictError("User with this email already exists");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const defaultRoleId = 4; 
 
     const user = await this.authRepository.createUser({
       firstName,
@@ -44,7 +35,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       mobile,
-      roleId: defaultRoleId,
+      roleId: config.app.defaultRoleId,
     });
 
     return {
@@ -58,21 +49,18 @@ export class AuthService {
     };
   }
 
-  async login(email: string, password: string): Promise<{ token: string; user: { id: number; firstName: string; lastName: string; email: string; username: string; mobile: string; roleId: number } }> {
+  async login(email: string, password: string): Promise<{ token: string; user: UserDTO }> {
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
-      throw new Error("Invalid email or password");
+      throw new AppError(401, "Invalid email or password");
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error("Invalid email or password");
+      throw new AppError(401, "Invalid email or password");
     }
 
-    // Generate JWT token
     const token = generateToken({ id: user.id, email: user.email });
-    
-    // Create session with 1 hour expiry
     const expiresAt = add(new Date(), { hours: 1 });
     await this.authRepository.createUserSession(user.id, token, expiresAt);
 
@@ -85,7 +73,7 @@ export class AuthService {
         email: user.email,
         username: user.username,
         mobile: user.mobile,
-        roleId: user.roleId
+        roleId: user.roleId,
       },
     };
   }
@@ -93,14 +81,14 @@ export class AuthService {
   async logout(token: string): Promise<void> {
     const isInvalidated = await this.authRepository.invalidateUserSession(token);
     if (!isInvalidated) {
-      throw new Error('Token is already invalid or does not exist');
+      throw new AppError(400, 'Token is already invalid or does not exist');
     }
   }
 
-  async getAuthUserDetails(userId: number): Promise<any> {
+  async getAuthUserDetails(userId: number): Promise<UserDTO> {
     const user = await this.authRepository.findUserById(userId);
     if (!user) {
-      throw new Error("User not found");
+      throw new NotFoundError("User not found");
     }
 
     return {
@@ -115,49 +103,36 @@ export class AuthService {
   }
 
   async updateUserDetails(userId: number, updateData: {
-  firstName?: string;
-  lastName?: string;
-  username?: string;
-  mobile?: string;
-  email?: string;
-}): Promise<any> {
-  
-  const updatedUser = await this.authRepository.updateUser(userId, updateData);
-  if (!updatedUser) {
-    throw new Error("User not found");
+    firstName?: string;
+    lastName?: string;
+    username?: string;
+    mobile?: string;
+    email?: string;
+  }): Promise<UserDTO> {
+    const updatedUser = await this.authRepository.updateUser(userId, updateData);
+    if (!updatedUser) {
+      throw new NotFoundError("User not found");
+    }
+
+    return {
+      id: updatedUser.id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      username: updatedUser.username,
+      mobile: updatedUser.mobile,
+      roleId: updatedUser.roleId,
+    };
   }
 
-  return {
-    id: updatedUser.id,
-    firstName: updatedUser.firstName,
-    lastName: updatedUser.lastName,
-    email: updatedUser.email,
-    username: updatedUser.username,
-    mobile: updatedUser.mobile,
-    roleId: updatedUser.roleId,
-  };
-  }
-
-  async updatePassword(userId: number, currentPassword: string, newPassword: string): Promise<boolean> {
-    // Validate current password
+  async updatePassword(userId: number, currentPassword: string, newPassword: string): Promise<void> {
     const isValid = await this.authRepository.validatePassword(userId, currentPassword);
     if (!isValid) {
-      throw new Error('Current password is incorrect');
+      throw new AppError(400, 'Current password is incorrect');
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
-    // Update password
-    const updated = await this.authRepository.updateUserPassword(userId, hashedPassword);
-    if (!updated) {
-      throw new Error('Failed to update password');
-    }
-
-    // Invalidate all sessions
-    await this.authRepository.invalidateAllUserSessions(userId);
-    
-    return true;
+    await this.authRepository.resetPasswordAndSessions(userId, hashedPassword);
   }
 
   async logoutAllSessions(userId: number): Promise<void> {

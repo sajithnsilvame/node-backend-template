@@ -1,14 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-
-interface AuthenticatedRequest extends Request {
-  user?: {
-    id: number;
-    username: string;
-    email: string;
-    roleId: number;
-    roleName: string;
-  };
-}
+import { Response, NextFunction } from 'express';
+import { AuthenticatedRequest } from '../types';
 
 export const canAccess = (allowedRoles: string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {

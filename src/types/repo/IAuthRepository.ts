@@ -11,5 +11,6 @@ export interface IAuthRepository {
   invalidateAllUserSessions(userId: number): Promise<boolean>;
   validatePassword(userId: number, currentPassword: string): Promise<boolean>;
   createUserSession(userId: number, token: string, expiresAt: Date): Promise<UserLoginSession>;
+  resetPasswordAndSessions(userId: number, hashedPassword: string): Promise<void>;
   isTokenValid(token: string): Promise<boolean>;
 }
