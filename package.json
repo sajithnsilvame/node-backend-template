@@ -9,7 +9,7 @@
   "scripts": {
     "start": "npm run build && node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p tsconfig.json && npm run copy:assets",
+    "build": "node scripts/build.js",
     "copy:assets": "copyfiles -u 1 \"src/assets/**/*\" \"src/config/*.js\" dist/",
     "migrate": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:migrate",
     "seed": "node -r ts-node/register ./node_modules/sequelize-cli/lib/sequelize db:seed:all",
